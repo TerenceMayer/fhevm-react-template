@@ -1,0 +1,44 @@
+{
+  "name": "@anonymous-art/fhevm-react",
+  "version": "1.0.0",
+  "description": "React hooks for FHEVM SDK",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "test": "jest",
+    "lint": "eslint src/**/*.{ts,tsx}"
+  },
+  "keywords": [
+    "fhevm",
+    "react",
+    "hooks",
+    "encryption",
+    "blockchain"
+  ],
+  "author": "Anonymous Art Authentication",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": "^17.0.0 || ^18.0.0",
+    "ethers": "^5.7.2 || ^6.0.0"
+  },
+  "dependencies": {
+    "@anonymous-art/fhevm-sdk": "file:../fhevm-sdk"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.0",
+    "@rollup/plugin-typescript": "^11.0.0",
+    "@types/react": "^18.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "eslint-plugin-react": "^7.0.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "react": "^18.0.0",
+    "rollup": "^4.0.0",
+    "typescript": "^5.0.0"
+  }
+}
