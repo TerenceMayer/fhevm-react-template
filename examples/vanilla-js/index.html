@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FHEVM Vanilla JS Example</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🔐 FHEVM SDK Vanilla JavaScript Example</h1>
+      <p>Demonstration of Universal FHEVM SDK without any framework</p>
+    </header>
+
+    <main>
+      <!-- Status Section -->
+      <section class="status-section">
+        <h2>Connection Status</h2>
+        <div id="fhevm-status" class="status pending">
+          ⏳ Initializing FHEVM...
+        </div>
+        <div id="error-status" class="status error" style="display: none;"></div>
+      </section>
+
+      <!-- Wallet Section -->
+      <section class="wallet-section">
+        <h2>Wallet Connection</h2>
+        <div id="wallet-connected" style="display: none;">
+          <div id="wallet-address" class="status success"></div>
+          <button id="disconnect-btn" class="btn btn-secondary">Disconnect</button>
+        </div>
+        <button id="connect-btn" class="btn btn-primary">
+          🦊 Connect MetaMask
+        </button>
+      </section>
+
+      <!-- Encrypt Section -->
+      <section class="form-section" id="encrypt-section" style="display: none;">
+        <h2>Encrypt a Value</h2>
+        <form id="encrypt-form">
+          <div class="form-group">
+            <label for="value-input">Value to Encrypt (0-255):</label>
+            <input
+              type="number"
+              id="value-input"
+              min="0"
+              max="255"
+              value="42"
+              class="form-input"
+              required
+            />
+            <small>Enter a number between 0 and 255 (euint8 type)</small>
+          </div>
+
+          <button type="submit" class="btn btn-primary" id="encrypt-btn">
+            🔐 Encrypt Value
+          </button>
+        </form>
+
+        <div class="info-box">
+          <strong>💡 What happens:</strong>
+          <ul>
+            <li>Your value is encrypted using FHEVM</li>
+            <li>Encryption happens client-side</li>
+            <li>The encrypted value can be sent to smart contracts</li>
+            <li>Computations can be performed on encrypted data</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Results Section -->
+      <section class="result-section" id="result-section" style="display: none;">
+        <h2>Encrypted Result</h2>
+        <div class="encrypted-value">
+          <code id="encrypted-output"></code>
+        </div>
+
+        <button id="decrypt-btn" class="btn btn-primary">
+          🔓 Decrypt Value
+        </button>
+
+        <div id="decrypted-result" class="decrypted-value" style="display: none;">
+          <strong>Decrypted Value:</strong> <span id="decrypted-output"></span>
+        </div>
+      </section>
+
+      <!-- Info Section -->
+      <section class="info-section">
+        <h2>SDK Features Demonstrated</h2>
+        <ul>
+          <li>✅ FHEVM Client Initialization</li>
+          <li>✅ Direct SDK Usage (No Framework)</li>
+          <li>✅ Value Encryption (euint8)</li>
+          <li>✅ User Decryption with EIP-712 Signature</li>
+          <li>✅ Minimal Bundle Size</li>
+          <li>✅ Fast Load Times</li>
+        </ul>
+      </section>
+
+      <!-- Links Section -->
+      <section class="links-section">
+        <h2>Resources</h2>
+        <ul>
+          <li><a href="https://github.com/TerenceMayer/FHEAnonymousArtAuthentication" target="_blank" rel="noopener noreferrer">GitHub Repository</a></li>
+          <li><a href="https://docs.zama.ai" target="_blank" rel="noopener noreferrer">Zama Documentation</a></li>
+          <li><a href="../../README.md">SDK Documentation</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p>Built with Universal FHEVM SDK | Powered by Zama</p>
+    </footer>
+  </div>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

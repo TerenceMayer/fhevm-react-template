@@ -1,0 +1,19 @@
+{
+  "name": "@anonymous-art/fhevm-vanilla-js-example",
+  "version": "1.0.0",
+  "description": "Vanilla JavaScript example using FHEVM SDK",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "serve": "npx http-server . -p 8080 -c-1 --cors"
+  },
+  "dependencies": {
+    "@anonymous-art/fhevm-sdk": "^1.0.0",
+    "ethers": "^6.14.0"
+  },
+  "devDependencies": {
+    "vite": "^4.3.0"
+  }
+}
