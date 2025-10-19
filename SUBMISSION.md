@@ -121,7 +121,7 @@ npm run serve
 ## 🔗 Links
 
 - **Live Demo**: https://terencemayer.github.io/FHEAnonymousArtAuthentication/
-- **GitHub**: https://github.com/TerenceMayer/FHEAnonymousArtAuthentication
+- **GitHub**: https://github.com/TerenceMayer/fhevm-react-template
 - **Smart Contract**: 0x4D874585f820437656554590C812b672305fbb72 (Sepolia)
 
 ---
@@ -148,8 +148,8 @@ Standard Ethereum signatures for user decryption with clear UX.
 ## 📞 Support
 
 For questions or issues, please visit:
-- GitHub Issues: https://github.com/TerenceMayer/FHEAnonymousArtAuthentication/issues
-- GitHub Discussions: https://github.com/TerenceMayer/FHEAnonymousArtAuthentication/discussions
+- GitHub Issues: https://github.com/TerenceMayer/fhevm-react-template/issues
+- GitHub Discussions: https://github.com/TerenceMayer/fhevm-react-template/discussions
 
 ---
 
