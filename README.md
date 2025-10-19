@@ -12,7 +12,7 @@
 
 - **🚀 Live Demo**: [https://terencemayer.github.io/FHEAnonymousArtAuthentication/](https://terencemayer.github.io/FHEAnonymousArtAuthentication/)
 - **📋 GitHub Repository**: [https://github.com/TerenceMayer/fhevm-react-template](https://github.com/TerenceMayer/fhevm-react-template)
-- **🎥 Video Demo**: Watch demonstration (demo.mp4)
+- **🎥 Video Demo**: Watch demonstration (demo1.mp4 demo2.mp4)
 - **📦 SDK Package**: `packages/fhevm-sdk/`
 - **⚛️ React Hooks**: `packages/fhevm-react/`
 
