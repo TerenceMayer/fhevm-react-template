@@ -1,54 +1,69 @@
 {
-  "name": "anonymous-art-fhevm",
-  "version": "2.0.0",
-  "description": "Anonymous Artwork Authentication Platform with Universal FHEVM SDK - fhEVM v0.6.0+",
+  "name": "fhevm-sdk-monorepo",
+  "version": "1.0.0",
+  "description": "Universal SDK for Zama fhEVM with Example Agricultural dApp",
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "examples/*"
   ],
-  "main": "index.html",
   "scripts": {
-    "compile": "npx hardhat compile",
-    "deploy": "npx hardhat run scripts/deploy.js --network sepolia",
-    "deploy:local": "npx hardhat run scripts/deploy.js --network hardhat",
-    "test": "npx hardhat test",
-    "clean": "npx hardhat clean",
-    "node": "npx hardhat node",
-    "build:sdk": "pnpm --filter './packages/*' -r build",
-    "dev:sdk": "pnpm --filter './packages/*' -r --parallel dev",
-    "test:sdk": "pnpm --filter './packages/*' -r test",
-    "lint": "pnpm --filter './packages/*' -r lint",
-    "serve": "npx http-server . -p 8080 --cors"
+    "build": "npm run build:sdk && npm run build:contracts",
+    "build:sdk": "cd packages/fhevm-sdk && npm run build && npm run build:react",
+    "build:contracts": "npx hardhat compile",
+    "deploy": "npx hardhat run deploy.js --network sepolia",
+    "start": "npx http-server . -p 3000 -c-1 --cors",
+    "start:nextjs": "cd examples/nextjs-demo && npm run dev",
+    "build:nextjs": "cd examples/nextjs-demo && npm run build",
+    "dev:sdk": "cd packages/fhevm-sdk && npm run dev",
+    "dev:nextjs": "cd examples/nextjs-demo && npm run dev",
+    "test": "npm run test --workspaces",
+    "lint": "npm run lint --workspaces",
+    "clean": "rm -rf packages/*/dist packages/*/node_modules examples/*/node_modules node_modules",
+    "install:all": "npm install"
   },
   "keywords": [
-    "fhEVM",
-    "FHE",
-    "blockchain",
-    "art-authentication",
+    "fhevm",
     "zama",
+    "fhe",
+    "homomorphic-encryption",
+    "ethereum",
+    "web3",
     "privacy",
-    "encryption"
+    "sdk",
+    "agriculture"
   ],
-  "author": "Anonymous Art Authentication Team",
+  "author": "Zama FHE Community",
   "license": "MIT",
-  "devDependencies": {
-    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
-    "dotenv": "^16.3.1",
-    "hardhat": "^2.19.0"
-  },
-  "dependencies": {
-    "@fhevm/solidity": "^0.8.0",
-    "@zama-fhe/oracle-solidity": "^0.2.0",
-    "ethers": "^6.14.0"
-  },
-  "engines": {
-    "node": ">=18.0.0"
-  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/anonymous-art-authentication"
+    "url": "https://github.com/your-username/fhevm-sdk.git"
   },
-  "bugs": {
-    "url": "https://github.com/yourusername/anonymous-art-authentication/issues"
+  "homepage": "https://your-username.github.io/fhevm-sdk/",
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "devDependencies": {
+    "@fhevm/solidity": "^0.9.0-1",
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "dotenv": "^16.3.1",
+    "eslint": "^8.0.0",
+    "ethers": "^5.7.2",
+    "fhevmjs": "^0.5.0",
+    "hardhat": "^2.19.5",
+    "http-server": "^14.1.1",
+    "jest": "^29.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@zama-fhe/oracle-solidity": "^0.2.0"
   }
 }

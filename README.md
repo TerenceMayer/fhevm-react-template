@@ -1,199 +1,57 @@
-# Universal FHEVM SDK
+# fhEVM SDK - Universal TypeScript SDK for Zama
 
-**A Framework-Agnostic SDK for Fully Homomorphic Encryption on Ethereum**
+> **Framework-Agnostic SDK for Fully Homomorphic Encryption on Ethereum**
+>
+> Built for the Zama fhEVM SDK Design Competition
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![fhEVM](https://img.shields.io/badge/fhEVM-v0.8.0-blue)](https://docs.zama.ai/fhevm)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue)](https://www.typescriptlang.org/)
-
----
-
-## 🔗 Quick Links
-
-- **🚀 Live Demo**: [https://terencemayer.github.io/FHEAnonymousArtAuthentication/](https://terencemayer.github.io/FHEAnonymousArtAuthentication/)
-- **📋 GitHub Repository**: [https://github.com/TerenceMayer/fhevm-react-template](https://github.com/TerenceMayer/fhevm-react-template)
-- **🎥 Video Demo**: Watch demonstration (demo1.mp4 demo2.mp4)
-- **📦 SDK Package**: `packages/fhevm-sdk/`
-- **⚛️ React Hooks**: `packages/fhevm-react/`
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://tyreebartoletti.github.io/FHECropYieldOptimizer/)
+[![Next.js Template](https://img.shields.io/badge/Next.js-14-black)](./examples/nextjs-demo/)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Network](https://img.shields.io/badge/network-Sepolia-purple)](https://sepolia.etherscan.io/)
 
 ---
 
-## 🎯 Project Overview
+## 🎯 What is fhEVM SDK?
 
-This project delivers a **complete, production-ready SDK** for building dApps with Fully Homomorphic Encryption (FHE) on Ethereum. The SDK provides a clean, modular API similar to wagmi, making it easy for developers to integrate privacy-preserving computations into their applications.
+**fhEVM SDK** is a production-ready, universal TypeScript library that makes Fully Homomorphic Encryption (FHE) accessible to every JavaScript developer. Whether you're building with Next.js, React, Vue, or vanilla JavaScript, this SDK provides a simple, type-safe interface to Zama's fhEVM technology.
 
-### What This SDK Provides
+### Why This SDK?
 
-✅ **Universal Core SDK** (`fhevm-sdk`)
-- Framework-agnostic TypeScript library
-- Works with any JavaScript/TypeScript project
-- Handles FHE initialization, encryption, and decryption
-- EIP-712 signature support for user decryption
-- Public decryption workflows
-
-✅ **React Integration** (`fhevm-react`)
-- Complete hooks library for React/Next.js
-- Wagmi-like API design for familiar developer experience
-- Type-safe, composable hooks
-- Built on the core SDK
-
-✅ **Demo Application** (Showcase)
-- Anonymous Art Authentication platform
-- Demonstrates SDK capabilities in a real-world scenario
-- Shows best practices for FHE implementation
+- 🚀 **Developer-First**: Wagmi-like API that web3 developers already know
+- 🎨 **Framework Agnostic**: Works everywhere JavaScript runs
+- 🔒 **Type-Safe**: Full TypeScript support with IntelliSense
+- 📦 **Modular**: Use only what you need - core SDK or with React hooks
+- 🛠️ **Production Ready**: Tested, documented, and deployed live
 
 ---
 
-## 🏗️ Architecture
+## 📦 SDK Architecture
 
-### Core Design Principles
-
-1. **Framework Agnostic**: Core SDK has zero dependencies on UI frameworks
-2. **Modular**: Clean separation between core logic and framework adapters
-3. **Type Safe**: Full TypeScript support with comprehensive type definitions
-4. **Developer Friendly**: Intuitive API inspired by popular libraries like wagmi
-5. **Production Ready**: Battle-tested patterns and error handling
-
-### Package Structure
+### Three-Layer Design
 
 ```
-fhevm-sdk/
-├── packages/
-│   ├── fhevm-sdk/              # Core SDK (framework-agnostic)
-│   │   ├── src/
-│   │   │   ├── client/        # FHE client initialization
-│   │   │   ├── encryption/    # Input encryption utilities
-│   │   │   ├── decryption/    # User & public decryption
-│   │   │   ├── signatures/    # EIP-712 signature handling
-│   │   │   └── types/         # TypeScript definitions
-│   │   └── package.json
-│   │
-│   └── fhevm-react/            # React hooks library
-│       ├── src/
-│       │   ├── hooks/         # React hooks (useFhevm, useEncryption, etc.)
-│       │   ├── context/       # React context providers
-│       │   └── types/         # React-specific types
-│       └── package.json
-│
-├── contracts/                  # Solidity smart contracts
-│   └── AnonymousArtAuthentication.sol
-│
-├── scripts/                    # Deployment & ABI generation
-│   └── deploy.js
-│
-├── examples/                   # Usage examples
-│   ├── vanilla-js/            # Pure JavaScript example
-│   ├── react/                 # React example
-│   └── nextjs/                # Next.js example (future)
-│
-└── index.html                 # Standalone demo (no build required)
+┌─────────────────────────────────────────────────────┐
+│  React Hooks Layer (Optional)                       │
+│  • useEncryptUint32()  • useDecrypt()               │
+│  • useFHEContract()    • useFHEInitialized()        │
+├─────────────────────────────────────────────────────┤
+│  Core SDK (Framework-Agnostic)                      │
+│  • createProvider()    • encrypt methods            │
+│  • decrypt methods     • contract helpers           │
+├─────────────────────────────────────────────────────┤
+│  fhevmjs + Gateway v2.0                             │
+│  • FHE encryption      • EIP-712 signatures         │
+└─────────────────────────────────────────────────────┘
 ```
 
----
+### Key Features
 
-## 📦 SDK Features
-
-### Core SDK (`fhevm-sdk`)
-
-#### Initialization
-```typescript
-import { FhevmClient } from '@fhevm-sdk/core';
-
-// Initialize from Web3 provider
-const client = await FhevmClient.fromWeb3Provider(window.ethereum);
-await client.initialize();
-
-// Or initialize with custom config
-const client = new FhevmClient({
-  provider: customProvider,
-  chainId: 11155111,
-  gatewayUrl: 'https://gateway.zama.ai'
-});
-```
-
-#### Encryption
-```typescript
-// Encrypt input values
-const encrypted = await client.encrypt(42, 'uint8');
-const encryptedLarge = await client.encrypt(1000000, 'uint32');
-
-// Batch encryption
-const batch = await client.encryptBatch([
-  { value: 100, type: 'uint8' },
-  { value: 200, type: 'uint16' },
-  { value: 300, type: 'uint32' }
-]);
-```
-
-#### Decryption
-
-**User Decryption** (EIP-712 Signature)
-```typescript
-// User signs to decrypt their own data
-const decrypted = await client.userDecrypt(
-  contractAddress,
-  encryptedValue,
-  userAddress
-);
-```
-
-**Public Decryption**
-```typescript
-// Decrypt publicly available data
-const publicData = await client.publicDecrypt(
-  contractAddress,
-  encryptedValue
-);
-```
-
-### React Hooks (`fhevm-react`)
-
-#### Setup Provider
-```tsx
-import { FhevmProvider } from '@fhevm-sdk/react';
-
-function App() {
-  return (
-    <FhevmProvider chainId={11155111}>
-      <YourApp />
-    </FhevmProvider>
-  );
-}
-```
-
-#### Use Hooks
-```tsx
-import { useFhevm, useEncryption, useDecryption } from '@fhevm-sdk/react';
-
-function MyComponent() {
-  const { client, isInitialized, error } = useFhevm();
-  const { encrypt, isEncrypting } = useEncryption();
-  const { decrypt, isDecrypting } = useDecryption();
-
-  const handleEncrypt = async () => {
-    const encrypted = await encrypt(42, 'uint8');
-    // Use encrypted value in transaction
-  };
-
-  const handleDecrypt = async () => {
-    const decrypted = await decrypt(contractAddress, encryptedValue);
-    console.log('Decrypted value:', decrypted);
-  };
-
-  if (!isInitialized) return <div>Initializing FHE...</div>;
-
-  return (
-    <div>
-      <button onClick={handleEncrypt} disabled={isEncrypting}>
-        Encrypt Value
-      </button>
-      <button onClick={handleDecrypt} disabled={isDecrypting}>
-        Decrypt Value
-      </button>
-    </div>
-  );
-}
-```
+- ✅ **Easy Initialization**: One-line provider setup
+- ✅ **All FHE Types**: bool, uint8, uint16, uint32, uint64, uint128, uint256, address
+- ✅ **EIP-712 Decryption**: Secure signature-based authorization
+- ✅ **Wagmi-like Hooks**: Familiar API for React developers
+- ✅ **Gateway v2.0**: Latest protocol support
+- ✅ **Full TypeScript**: Complete type safety
 
 ---
 
@@ -201,462 +59,687 @@ function MyComponent() {
 
 ### Installation
 
-**From Root** (recommended)
 ```bash
-# Clone repository
-git clone https://github.com/TerenceMayer/fhevm-react-template.git
-cd FHEAnonymousArtAuthentication
+npm install @fhevm/sdk
+# or
+yarn add @fhevm/sdk
+```
 
-# Install all packages
+### Vanilla JavaScript/TypeScript
+
+```typescript
+import { createProvider } from '@fhevm/sdk';
+
+// Initialize provider
+const provider = createProvider();
+await provider.initialize({
+  chainId: 11155111,
+  gatewayAddress: '0x33347831500F1e73f102414fAf8fD6b494F06a10'
+});
+
+// Encrypt data
+const encrypted = await provider.encryptUint32(42);
+
+// Use in contract call
+await contract.submitValue(encrypted.data);
+```
+
+### React / Next.js
+
+```tsx
+import { FHEProviderComponent, useEncryptUint32 } from '@fhevm/sdk/react';
+
+// Wrap your app
+function App() {
+  return (
+    <FHEProviderComponent
+      config={{
+        chainId: 11155111,
+        gatewayAddress: '0x33347831500F1e73f102414fAf8fD6b494F06a10'
+      }}
+      autoInitialize
+    >
+      <YourApp />
+    </FHEProviderComponent>
+  );
+}
+
+// Use hooks in components
+function EncryptComponent() {
+  const { encrypt, isEncrypting } = useEncryptUint32();
+
+  const handleEncrypt = async () => {
+    const result = await encrypt(42);
+    console.log(result.data); // Encrypted ciphertext
+  };
+
+  return (
+    <button onClick={handleEncrypt} disabled={isEncrypting}>
+      {isEncrypting ? 'Encrypting...' : 'Encrypt Value'}
+    </button>
+  );
+}
+```
+
+### Decryption with EIP-712
+
+```typescript
+import { useDecrypt } from '@fhevm/sdk/react';
+import { ethers } from 'ethers';
+
+function DecryptComponent() {
+  const { decrypt, result, isDecrypting } = useDecrypt();
+
+  const handleDecrypt = async () => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+
+    await decrypt({
+      handle: 'ciphertextHandle', // From contract
+      contractAddress: '0xYourContract...',
+      signer
+    });
+
+    console.log(result.numberValue); // Decrypted value
+  };
+
+  return <button onClick={handleDecrypt}>Decrypt</button>;
+}
+```
+
+---
+
+## 📚 Available Hooks
+
+All React hooks follow the Wagmi pattern for consistency:
+
+### Encryption Hooks
+- `useEncryptBool(value)` - Encrypt boolean values
+- `useEncryptUint8(value)` - Encrypt 8-bit unsigned integers
+- `useEncryptUint16(value)` - Encrypt 16-bit unsigned integers
+- `useEncryptUint32(value)` - Encrypt 32-bit unsigned integers
+- `useEncryptUint64(value)` - Encrypt 64-bit unsigned integers
+- `useEncryptUint128(value)` - Encrypt 128-bit unsigned integers
+- `useEncryptUint256(value)` - Encrypt 256-bit unsigned integers
+- `useEncryptAddress(address)` - Encrypt Ethereum addresses
+
+### Decryption Hooks
+- `useDecrypt()` - Decrypt with EIP-712 signature
+- `usePublicDecrypt()` - Decrypt public values
+
+### Utility Hooks
+- `useFHEInitialized()` - Check FHE instance readiness
+- `useFHEContract(address, abi)` - Create type-safe contract interface
+
+---
+
+## 🎨 Examples & Templates
+
+This repository includes two comprehensive examples demonstrating different integration approaches:
+
+### 1. Next.js Template (Framework Integration) ✅
+
+Complete Next.js 14 application with full SDK integration:
+
+- **Location**: [`examples/nextjs-demo/`](./examples/nextjs-demo/)
+- **Integration Type**: Full SDK with React Hooks
+- **Features**:
+  - ✅ FHEProviderComponent with Context API
+  - ✅ All encryption hooks (useBool, useUint8/16/32)
+  - ✅ Decryption with useDecrypt() hook
+  - ✅ App Router with Server & Client Components
+  - ✅ MetaMask wallet integration
+  - ✅ TypeScript type safety
+  - ✅ Loading states & error handling
+  - ✅ Professional responsive UI
+
+**Quick Start:**
+```bash
+# From monorepo root
+npm run dev:nextjs
+# Or from examples/nextjs-demo
+cd examples/nextjs-demo && npm run dev
+# Opens at http://localhost:3000
+```
+
+**SDK Integration Highlights:**
+```tsx
+// Provider setup in layout.tsx
+<FHEProviderComponent config={fheConfig} autoInitialize>
+  {children}
+</FHEProviderComponent>
+
+// Using hooks in components
+const { encrypt, isEncrypting } = useEncryptUint32();
+const { decrypt, result } = useDecrypt();
+```
+
+[**📖 Next.js Template Full Documentation →**](./examples/nextjs-demo/README.md)
+
+---
+
+### 2. Vanilla HTML/JS Demo (Live Production App) 🌐
+
+Real-world agricultural data collaboration platform:
+
+- **Location**: [`examples/fheCropYieldOptimizer/`](./examples/fheCropYieldOptimizer/)
+- **Live Demo**: [https://tyreebartoletti.github.io/FHECropYieldOptimizer/](https://tyreebartoletti.github.io/FHECropYieldOptimizer/)
+- **Integration Type**: Vanilla JS with optional SDK integration guide
+- **Use Case**: Privacy-preserving multi-farm yield optimization
+- **Contract**: `0xf2301736A15a5152401E968cB8d995c0F508f568` on Sepolia
+
+**Key Features:**
+- 🏭 Farm registration system
+- 📊 Encrypted agricultural data submission
+- 🤝 Multi-party collaborative analysis
+- 💡 Personalized optimization recommendations
+- 🔒 Complete data privacy with FHE
+- 📱 Responsive design for mobile & desktop
+
+**Start Locally:**
+```bash
+cd examples/fheCropYieldOptimizer
 npm install
-
-# Build SDK packages
-npm run build
-
-# Compile Solidity contracts
-npm run compile
+npm start
+# Opens at http://localhost:3000
 ```
 
-**Individual Packages**
+**SDK Integration Guide:**
+The example includes commented code showing how to integrate @fhevm/sdk:
+```javascript
+// Initialize SDK
+const fheProvider = createProvider();
+await fheProvider.initialize({
+  chainId: 11155111,
+  gatewayAddress: '0x33347831500F1e73f102414fAf8fD6b494F06a10'
+});
+
+// Encrypt data
+const encrypted = await fheProvider.encryptUint32(value);
+await contract.submitData(encrypted.data);
+```
+
+[**📖 FHE Crop Optimizer Documentation →**](./examples/fheCropYieldOptimizer/README.md)
+
+---
+
+### Comparison Table
+
+| Feature | Next.js Demo | Crop Yield Optimizer |
+|---------|-------------|---------------------|
+| **Framework** | Next.js 14 | Vanilla HTML/JS |
+| **SDK Integration** | Full (Hooks) | Optional (Guide provided) |
+| **TypeScript** | ✅ Full | ❌ JavaScript |
+| **Live Deployment** | Development | ✅ [Production](https://tyreebartoletti.github.io/FHECropYieldOptimizer/) |
+| **Use Case** | SDK Feature Demo | Real-world Application |
+| **Complexity** | Moderate | Simple |
+| **Best For** | React developers | Quick start, vanilla JS |
+| **Smart Contract** | Demo contract | Production contract |
+
+### Which Example Should I Use?
+
+- **Choose Next.js Demo** if you're building a React/Next.js app and want to use SDK hooks
+- **Choose Crop Yield Optimizer** if you need a vanilla JS example or real-world use case inspiration
+- **Use Both** to see different integration patterns and choose what fits your stack
+
+---
+
+## 🏗️ Monorepo Structure
+
+This project uses npm workspaces for efficient development:
+
+```
+fhevm-react-template/
+├── packages/
+│   └── fhevm-sdk/              # Core SDK package
+│       ├── src/
+│       │   ├── core/           # Framework-agnostic core
+│       │   ├── react/          # React hooks & providers
+│       │   └── types/          # TypeScript definitions
+│       ├── package.json
+│       └── README.md           # SDK documentation
+│
+├── examples/
+│   ├── nextjs-demo/            # Next.js 14 template with full SDK
+│   │   ├── app/
+│   │   │   ├── layout.tsx      # FHE Provider setup
+│   │   │   ├── page.tsx        # Demo components
+│   │   │   └── globals.css     # Styling
+│   │   ├── package.json
+│   │   ├── tsconfig.json
+│   │   └── README.md           # Next.js integration guide
+│   │
+│   └── fheCropYieldOptimizer/  # Vanilla JS production example
+│       ├── contracts/
+│       │   └── CropYieldOptimizer.sol
+│       ├── index.html          # Main application
+│       ├── deploy.js           # Contract deployment
+│       ├── hardhat.config.js   # Hardhat configuration
+│       ├── package.json
+│       └── README.md           # App documentation
+│
+├── contracts/                  # Additional smart contracts
+│   └── ConfidentialYieldOptimizer.sol
+│
+├── scripts/                    # Deployment scripts
+│   └── deploy.js
+│
+├── package.json                # Root workspace config
+├── README.md                   # This file (main documentation)
+├── demo1.mp4                   # Video demonstrations
+├── demo2.mp4
+└── demo3.mp4
+```
+
+### Directory Guide
+
+- **`packages/fhevm-sdk/`** - Universal TypeScript SDK (core package)
+- **`examples/nextjs-demo/`** - Next.js integration with React hooks
+- **`examples/fheCropYieldOptimizer/`** - Vanilla JS production application
+- **`contracts/`** - Solidity smart contracts
+- **`scripts/`** - Build and deployment utilities
+
+---
+
+## 🛠️ Development
+
+### Install All Dependencies
+
 ```bash
-# Install core SDK
-npm install @fhevm-sdk/core
-
-# Install React hooks (includes core)
-npm install @fhevm-sdk/react
+# Install all packages including SDK and examples
+npm install
 ```
 
-### Development Workflow
+### Build SDK
 
-1. **Compile Contracts**
 ```bash
-npm run compile
+npm run build:sdk
 ```
-This generates ABI files in `artifacts/contracts/`
 
-2. **Deploy Contracts**
+This compiles both core and React packages.
+
+### Run Examples
+
+#### Next.js Demo
 ```bash
-npx hardhat run scripts/deploy.js --network sepolia
-```
+# From root
+npm run dev:nextjs
 
-3. **Start Demo Application**
+# Or from examples directory
+cd examples/nextjs-demo
+npm install
+npm run dev
+```
+Opens at http://localhost:3000
+
+#### FHE Crop Yield Optimizer
 ```bash
-# No build required - open index.html directly
-# Or serve with any HTTP server:
-npm run serve
-# Access at http://localhost:8080
+# Navigate to example directory
+cd examples/fheCropYieldOptimizer
+npm install
+npm start
+```
+Opens at http://localhost:3000
+
+### Compile Contracts
+
+```bash
+npm run build:contracts
+
+# Or compile specific example contracts
+cd examples/fheCropYieldOptimizer
+npx hardhat compile
 ```
 
-4. **Run Tests**
+### Deploy Contracts
+
+```bash
+# Deploy main contracts
+npm run deploy
+
+# Or deploy example contracts
+cd examples/fheCropYieldOptimizer
+npx hardhat run deploy.js --network sepolia
+```
+
+### Run Tests
+
 ```bash
 npm test
 ```
 
 ---
 
-## 🎨 Demo Application: Anonymous Art Authentication
+## 🎯 Competition Requirements
 
-The demo showcases SDK capabilities through a real-world use case where privacy is paramount.
+This submission fulfills all Zama SDK Design Competition requirements:
 
-### Core Concept
-
-**Anonymous Art Authentication** eliminates bias in artwork verification by enabling experts to authenticate artworks without knowing:
-- Artist name or reputation
-- Artwork title or provenance
-- Estimated value or market price
-
-This demonstrates how FHE can preserve privacy while enabling trustless verification.
-
-### Key Features Demonstrated
-
-1. **Encrypted Inputs**
-   - Artwork metadata (age, style, materials) → `euint32`
-   - Condition scores → `euint8`
-   - Expert credentials → `euint8`
-
-2. **Encrypted Computation**
-   - Authentication scores → `euint8`
-   - Confidence levels → `euint8`
-   - All computation happens on encrypted data
-
-3. **Access Control**
-   - ACL management with `FHE.allow()` and `FHE.allowThis()`
-   - Role-based permissions (owners, experts, admins)
-
-4. **Decryption Flows**
-   - User decryption for personal data
-   - Admin decryption for consensus results
-   - Gateway integration ready
-
-### Live Demo
-
-Experience the platform at: [https://terencemayer.github.io/FHEAnonymousArtAuthentication/](https://terencemayer.github.io/FHEAnonymousArtAuthentication/)
-
-**Smart Contract**: [0x4D874585f820437656554590C812b672305fbb72](https://sepolia.etherscan.io/address/0x4D874585f820437656554590C812b672305fbb72)
+| Requirement | Status | Location |
+|------------|--------|----------|
+| Universal SDK Package | ✅ | `packages/fhevm-sdk/` |
+| Framework-Agnostic Core | ✅ | `packages/fhevm-sdk/src/core/` |
+| React Integration | ✅ | `packages/fhevm-sdk/src/react/` |
+| **Next.js Template** | ✅ | `examples/nextjs-demo/` |
+| Initialization Utilities | ✅ | `createProvider()` |
+| Encryption Methods | ✅ | All FHE types supported |
+| Decryption with EIP-712 | ✅ | `userDecrypt`, `publicDecrypt` |
+| Wagmi-like API | ✅ | React hooks pattern |
+| TypeScript Support | ✅ | Full type definitions |
+| Monorepo Structure | ✅ | npm workspaces |
+| Root-Level Commands | ✅ | All scripts in root |
+| Documentation | ✅ | Complete README & guides |
+| Live Demo | ✅ | Deployed application |
+| Video Demo | ✅ | `demo1.mp4 demo2.mp4 demo3.mp4` |
 
 ---
 
-## 📖 SDK API Reference
+## 📖 API Documentation
 
-### Core SDK Exports
+### Core SDK API
+
+#### `createProvider()`
+
+Creates a new FHE provider instance.
 
 ```typescript
-// Client
-export class FhevmClient {
-  static async fromWeb3Provider(provider: any): Promise<FhevmClient>
-  async initialize(): Promise<void>
-  async encrypt(value: number, type: FheType): Promise<EncryptedValue>
-  async encryptBatch(inputs: EncryptInput[]): Promise<EncryptedValue[]>
-  async userDecrypt(contract: string, value: EncryptedValue, user: string): Promise<number>
-  async publicDecrypt(contract: string, value: EncryptedValue): Promise<number>
-}
+import { createProvider } from '@fhevm/sdk';
 
-// Types
-export type FheType = 'uint8' | 'uint16' | 'uint32' | 'uint64' | 'uint128' | 'uint256'
-export type EncryptedValue = {
-  data: Uint8Array
-  type: FheType
-}
+const provider = createProvider();
+```
 
-// Utilities
-export const FheUtils = {
-  isInitialized(): boolean
-  getChainId(): number
-  getContractAddress(): string
-}
+#### `provider.initialize(config)`
+
+Initializes the FHE instance with network configuration.
+
+```typescript
+await provider.initialize({
+  chainId: 11155111,
+  gatewayAddress: '0x33347831500F1e73f102414fAf8fD6b494F06a10'
+});
+```
+
+#### Encryption Methods
+
+All encryption methods return `Promise<EncryptedData>`:
+
+```typescript
+// Encrypt different types
+const boolResult = await provider.encryptBool(true);
+const uint8Result = await provider.encryptUint8(42);
+const uint32Result = await provider.encryptUint32(1000000);
+const addressResult = await provider.encryptAddress('0x...');
+
+// Access encrypted data
+console.log(boolResult.data); // "0x..." hex string
+```
+
+#### Decryption Methods
+
+```typescript
+// User decrypt (requires signature)
+const result = await provider.userDecrypt({
+  handle: 'ciphertextHandle',
+  contractAddress: '0x...',
+  signer: ethersSigner
+});
+
+// Public decrypt (no signature)
+const publicResult = await provider.publicDecrypt({
+  handle: 'publicHandle',
+  contractAddress: '0x...'
+});
 ```
 
 ### React Hooks API
 
-```typescript
-// Provider
-export function FhevmProvider({
-  chainId?: number
-  children: React.ReactNode
-}): JSX.Element
-
-// Hooks
-export function useFhevm(): {
-  client: FhevmClient | null
-  isInitialized: boolean
-  error: Error | null
-  chainId: number
-}
-
-export function useEncryption(): {
-  encrypt: (value: number, type: FheType) => Promise<EncryptedValue>
-  encryptBatch: (inputs: EncryptInput[]) => Promise<EncryptedValue[]>
-  isEncrypting: boolean
-  error: Error | null
-}
-
-export function useDecryption(): {
-  decrypt: (contract: string, value: EncryptedValue) => Promise<number>
-  decryptPublic: (contract: string, value: EncryptedValue) => Promise<number>
-  isDecrypting: boolean
-  error: Error | null
-}
-
-export function useContract(address: string, abi: any): {
-  contract: Contract | null
-  isLoading: boolean
-  error: Error | null
-}
-```
-
----
-
-## 🎥 Video Demonstration
-
-Watch our comprehensive video demo (demo.mp4) showcasing:
-
-### SDK Features
-- ✅ Installation and setup process
-- ✅ Core SDK usage (encryption/decryption)
-- ✅ React hooks integration
-- ✅ EIP-712 signature workflows
-- ✅ Contract deployment and interaction
-
-### Demo Application
-- ✅ Complete workflow from artwork submission to authentication
-- ✅ Privacy-preserving expert evaluation
-- ✅ Real blockchain transactions on Sepolia testnet
-- ✅ Admin panel functionality
-
-### Design Choices
-- ✅ Why framework-agnostic architecture
-- ✅ API design inspired by wagmi
-- ✅ Type safety and developer experience
-- ✅ Performance optimizations
-
----
-
-## 🔧 Advanced Usage
-
-### Custom Configuration
+All hooks return consistent interfaces:
 
 ```typescript
-import { FhevmClient, FhevmConfig } from '@fhevm-sdk/core';
+// Encryption hooks
+const {
+  encrypt,           // Function to encrypt value
+  isEncrypting,      // Loading state
+  error,             // Error object if failed
+  result             // Encrypted result
+} = useEncryptUint32();
 
-const config: FhevmConfig = {
-  chainId: 11155111,
-  gatewayUrl: 'https://custom-gateway.example.com',
-  aclAddress: '0x...',
-  kmsVerifierAddress: '0x...',
-  customProvider: window.ethereum,
-  cacheEnabled: true
-};
-
-const client = new FhevmClient(config);
-await client.initialize();
-```
-
-### Error Handling
-
-```typescript
-import { FhevmError, ErrorCodes } from '@fhevm-sdk/core';
-
-try {
-  const encrypted = await client.encrypt(value, 'uint8');
-} catch (error) {
-  if (error instanceof FhevmError) {
-    switch (error.code) {
-      case ErrorCodes.NOT_INITIALIZED:
-        console.error('FHE not initialized');
-        break;
-      case ErrorCodes.ENCRYPTION_FAILED:
-        console.error('Encryption failed:', error.message);
-        break;
-      case ErrorCodes.SIGNATURE_REJECTED:
-        console.error('User rejected signature');
-        break;
-    }
+// Decryption hook
+const {
+  decrypt,           // Function to decrypt
+  isDecrypting,      // Loading state
+  error,             // Error object if failed
+  result: {
+    value,           // String representation
+    numberValue,     // Numeric value (if applicable)
+    boolValue        // Boolean value (if applicable)
   }
-}
+} = useDecrypt();
+
+// Initialization hook
+const isReady = useFHEInitialized();
 ```
 
-### Batch Operations
+[**📘 Complete API Reference →**](./packages/fhevm-sdk/README.md)
+
+---
+
+## 🔐 Security Considerations
+
+### Client-Side Encryption
+
+All encryption happens in the browser before data is sent to the blockchain. Your plaintext data never leaves the client.
+
+### EIP-712 Signatures
+
+Decryption requires user signature following EIP-712 standard, ensuring only authorized parties can decrypt values.
+
+### Gateway v2.0 Protocol
+
+This SDK implements the latest Gateway v2.0 specifications:
+- Dynamic pauser management
+- KMS generation tracking
+- Individual node responses
+- No on-chain aggregation
+
+### Best Practices
+
+1. **Never log encrypted data** - Ciphertexts are sensitive
+2. **Validate inputs** - Check values before encryption
+3. **Handle errors gracefully** - Network requests can fail
+4. **Use proper types** - TypeScript helps prevent mistakes
+5. **Test thoroughly** - Verify on testnet before mainnet
+
+---
+
+## 🌐 Deployment
+
+### Live Deployments
+
+- **Demo Application**: [https://tyreebartoletti.github.io/FHECropYieldOptimizer/](https://tyreebartoletti.github.io/FHECropYieldOptimizer/)
+- **Smart Contract**: [`0xf2301736A15a5152401E968cB8d995c0F508f568`](https://sepolia.etherscan.io/address/0xf2301736A15a5152401E968cB8d995c0F508f568)
+- **Network**: Ethereum Sepolia Testnet
+- **Gateway**: `0x33347831500F1e73f102414fAf8fD6b494F06a10`
+
+### Deploy Your Own
+
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+2. Configure environment:
+   ```bash
+   cp .env.example .env
+   # Edit .env with your private key and RPC URL
+   ```
+
+3. Deploy contract:
+   ```bash
+   npm run deploy
+   ```
+
+4. Update frontend config with your contract address
+
+---
+
+## 📹 Video Demonstration
+
+A 3-minute video walkthrough is included in this repository:
+
+- **File**: `demo1.mp4 demo2.mp4 demo3.mp4`
+- **Content**:
+  - SDK installation and setup
+  - Next.js integration walkthrough
+  - Live encryption/decryption demo
+  - Design decisions and architecture
+  - Real-world use case demonstration
+
+---
+
+## 🎓 Tutorial: Build Your First FHE App
+
+### Step 1: Install SDK
+
+```bash
+npm install @fhevm/sdk ethers
+```
+
+### Step 2: Initialize Provider
 
 ```typescript
-// Efficient batch encryption for multiple inputs
-const inputs = [
-  { value: 100, type: 'uint8' as const },
-  { value: 200, type: 'uint16' as const },
-  { value: 300, type: 'uint32' as const }
-];
+import { createProvider } from '@fhevm/sdk';
 
-const encrypted = await client.encryptBatch(inputs);
+const provider = createProvider();
+await provider.initialize({
+  chainId: 11155111,
+  gatewayAddress: '0x33347831500F1e73f102414fAf8fD6b494F06a10'
+});
+```
 
-// Use in contract call
-await contract.submitMultiple(
-  encrypted[0].data,
-  encrypted[1].data,
-  encrypted[2].data
+### Step 3: Encrypt Data
+
+```typescript
+const encrypted = await provider.encryptUint32(42);
+```
+
+### Step 4: Submit to Contract
+
+```typescript
+import { ethers } from 'ethers';
+
+const contract = new ethers.Contract(
+  contractAddress,
+  contractABI,
+  signer
 );
+
+await contract.submitValue(encrypted.data);
 ```
 
----
+### Step 5: Decrypt Result
 
-## 🌐 Technology Stack
+```typescript
+const result = await provider.userDecrypt({
+  handle: await contract.getEncryptedResult(),
+  contractAddress: contract.address,
+  signer
+});
 
-### SDK Core
-- **Language**: TypeScript 5.0+
-- **Build**: Rollup for optimal bundle size
-- **Testing**: Jest + Testing Library
-- **FHE Library**: fhevmjs (Zama's official library)
-
-### React Integration
-- **Framework**: React 18+
-- **Hooks**: Functional components with hooks
-- **Context**: React Context API for state management
-- **Type Safety**: Full TypeScript support
-
-### Smart Contracts
-- **Language**: Solidity 0.8.24
-- **Framework**: Hardhat
-- **FHE Library**: @fhevm/solidity v0.8.0
-- **Network**: Ethereum Sepolia Testnet
-
-### Demo Frontend
-- **Pure HTML/CSS/JavaScript**: No build step required
-- **Web3**: ethers.js v6.14.0
-- **Wallet**: MetaMask compatible
-- **Responsive**: Mobile and desktop optimized
-
----
-
-## 🧪 Testing
-
-### Unit Tests
-```bash
-# Run all tests
-npm test
-
-# Run with coverage
-npm run test:coverage
-
-# Run specific package tests
-npm test -- packages/fhevm-sdk
-npm test -- packages/fhevm-react
+console.log('Decrypted value:', result.numberValue);
 ```
 
-### Integration Tests
-```bash
-# Test against local hardhat node
-npm run test:integration
 
-# Test against Sepolia testnet
-npm run test:sepolia
-```
-
-### E2E Tests
-```bash
-# Run end-to-end tests with demo app
-npm run test:e2e
-```
-
----
-
-## 🛣️ Roadmap
-
-### Phase 1: Core SDK (✅ Completed)
-- [x] Framework-agnostic core SDK
-- [x] React hooks library
-- [x] TypeScript definitions
-- [x] EIP-712 signature support
-- [x] User and public decryption
-
-### Phase 2: Enhanced Developer Experience (🚧 In Progress)
-- [ ] Vue.js adapter
-- [ ] Svelte adapter
-- [ ] CLI tool for project scaffolding
-- [ ] Interactive documentation site
-- [ ] More usage examples
-
-### Phase 3: Advanced Features (📋 Planned)
-- [ ] Gateway integration for automated decryption
-- [ ] Encrypted state management utilities
-- [ ] Transaction batching optimizations
-- [ ] DevTools browser extension
-- [ ] Performance monitoring
-
-### Phase 4: Ecosystem (🔮 Future)
-- [ ] SDK plugins system
-- [ ] Community templates library
-- [ ] Integration with popular dApp frameworks
-- [ ] Educational resources and tutorials
-- [ ] Conference talks and workshops
-
----
-
-## 📚 Documentation
-
-### For SDK Users
-
-- **Installation Guide**: Get started with the SDK
-- **API Reference**: Complete API documentation
-- **Usage Examples**: Real-world code examples
-- **Best Practices**: Recommended patterns
-- **Troubleshooting**: Common issues and solutions
-
-### For Contributors
-
-- **Architecture Overview**: SDK design principles
-- **Development Guide**: How to contribute
-- **Testing Guide**: Writing and running tests
-- **Release Process**: How we publish updates
 
 ---
 
 ## 🤝 Contributing
 
-We welcome contributions! This is an open-source SDK project.
+We welcome contributions! This SDK is open source and community-driven.
 
 ### Ways to Contribute
 
-- 🐛 **Report Bugs**: Open issues with detailed reports
-- 💡 **Suggest Features**: Share ideas for SDK improvements
+- 🐛 **Report Bugs**: Open an issue with reproduction steps
+- 💡 **Suggest Features**: Share ideas for improvements
 - 📝 **Improve Docs**: Help make documentation clearer
-- 🔧 **Submit PRs**: Add features or fix bugs
-- 🎨 **Create Examples**: Show SDK usage in different scenarios
-- 🧪 **Write Tests**: Improve test coverage
+- 🔧 **Submit PRs**: Fix bugs or add features
+- ⭐ **Star the Repo**: Show your support!
 
 ### Development Setup
 
-1. Fork the repository
-2. Clone your fork
-3. Install dependencies: `npm install`
-4. Create a feature branch: `git checkout -b feature/amazing-feature`
-5. Make your changes
-6. Run tests: `npm test`
-7. Commit: `git commit -m 'Add amazing feature'`
-8. Push: `git push origin feature/amazing-feature`
-9. Open a Pull Request
+```bash
+# Clone repository
+git clone <your-repository-url>
+cd fhevm-react-template
+
+# Install dependencies
+npm install
+
+# Build SDK
+npm run build:sdk
+
+# Run tests
+npm test
+
+# Start development
+npm run dev:sdk
+```
 
 ---
 
 ## 📄 License
 
-This project is licensed under the **MIT License**.
-
-```
-MIT License
-
-Copyright (c) 2025 FHE VM SDK Project
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-```
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
 ## 🙏 Acknowledgments
 
-- **[Zama](https://www.zama.ai/)**: For pioneering FHE technology and fhEVM
-- **[Ethereum Foundation](https://ethereum.org/)**: For the blockchain infrastructure
-- **wagmi**: For API design inspiration
-- **Community Contributors**: For feedback and contributions
+- **Zama**: For pioneering FHE technology and hosting this competition
+- **Ethereum Foundation**: For providing the infrastructure
+- **fhevmjs Contributors**: For the core FHE library
+- **Community**: For feedback and support
 
 ---
 
-## 📞 Contact & Support
+## 📞 Support & Resources
 
-- **GitHub Issues**: [Report bugs or request features](https://github.com/TerenceMayer/fhevm-react-template/issues)
-- **Discussions**: [Join community discussions](https://github.com/TerenceMayer/fhevm-react-template/discussions)
-- **Live Demo**: [https://terencemayer.github.io/FHEAnonymousArtAuthentication/](https://terencemayer.github.io/FHEAnonymousArtAuthentication/)
+### Documentation
+- [SDK Documentation](./packages/fhevm-sdk/README.md)
+- [Next.js Template Guide](./examples/nextjs-demo/README.md)
+- [Architecture Overview](./ARCHITECTURE.md)
+
+
+### Links
+- **Live Demo**: [https://tyreebartoletti.github.io/FHECropYieldOptimizer/](https://tyreebartoletti.github.io/FHECropYieldOptimizer/)
+- **Zama Docs**: [https://docs.zama.ai/](https://docs.zama.ai/)
+- **fhEVM Docs**: [https://docs.fhevm.zama.ai/](https://docs.fhevm.zama.ai/)
+- **EIP-712 Specification**: [https://eips.ethereum.org/EIPS/eip-712](https://eips.ethereum.org/EIPS/eip-712)
+
+### Community
+- Open an issue on GitHub
+- Join the discussion
+- Check the FAQ
 
 ---
 
-## 🌟 Why This SDK?
+## 🌟 Why Choose fhEVM SDK?
 
 ### For Developers
-- **Easy Integration**: Drop-in solution for any JavaScript/TypeScript project
-- **Type Safety**: Full TypeScript support catches errors at compile time
-- **Framework Flexible**: Use with React, Vue, Svelte, or vanilla JS
-- **Production Ready**: Battle-tested patterns and comprehensive error handling
-- **Great DX**: Intuitive API inspired by popular libraries
+- ⚡ **Fast Integration**: Get started in minutes, not hours
+- 🎯 **Familiar API**: If you know Wagmi, you know this SDK
+- 📚 **Great Docs**: Every feature explained with examples
+- 🔍 **Type Safety**: Catch errors before runtime
+- 🧪 **Well Tested**: Production-ready code
 
 ### For Projects
-- **Privacy First**: Enable privacy-preserving dApps without deep FHE knowledge
-- **Modular**: Use only what you need, keep bundle sizes small
-- **Well Tested**: Comprehensive test suite ensures reliability
-- **Active Development**: Regular updates and community support
-- **Open Source**: MIT licensed, free to use and modify
+- 🏗️ **Flexible**: Works with your stack
+- 📦 **Modular**: Use only what you need
+- 🚀 **Production Ready**: Deployed and proven
+- 🔒 **Secure**: Best practices built-in
+- 🌍 **Community Driven**: Open source, collaborative
 
 ---
 
-**Built with ❤️ for the Ethereum and FHE developer community**
+**Built with ❤️ for the Zama fhEVM ecosystem**
 
-*Making Fully Homomorphic Encryption accessible to every developer*
-
+*Making privacy-preserving blockchain applications accessible to every developer*
