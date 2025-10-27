@@ -268,16 +268,19 @@ The `examples/` directory contains complete, working examples demonstrating how 
 
 ### Available Examples
 
+All examples demonstrate complete SDK integration using `@anonymous-art/fhevm-sdk` and `@anonymous-art/fhevm-react` packages.
+
 #### 1. Vanilla JavaScript Example (`examples/vanilla-js/`)
 
 **Perfect for:** Developers who want to use the SDK without any framework overhead.
 
 **Features:**
-- Pure JavaScript implementation using only `@anonymous-art/fhevm-sdk`
-- No build step required - can run directly in the browser
+- Pure JavaScript implementation using `@anonymous-art/fhevm-sdk`
+- Direct FhevmClient usage with Web3 provider
+- No build step required - runs with Vite
 - Minimal bundle size and fast load times
 - Full SDK access without framework abstractions
-- Works with any static hosting service
+- Demonstrates core encryption/decryption workflow
 
 **Quick Start:**
 ```bash
@@ -287,9 +290,19 @@ npm run dev  # Visit http://localhost:5173
 ```
 
 **Key Files:**
-- `src/main.js` - Main application logic with SDK usage
+- `src/main.js` - Main application logic with FhevmClient SDK usage
 - `index.html` - Simple HTML structure
 - `style.css` - Basic styling
+
+**SDK Integration:**
+```javascript
+import { FhevmClient } from '@anonymous-art/fhevm-sdk';
+
+const client = FhevmClient.fromWeb3Provider(window.ethereum);
+await client.initialize({ chainId: 11155111 });
+
+const encrypted = await client.encrypt(42, 'uint8');
+```
 
 **Use Cases:**
 - Simple dApps or prototypes
@@ -305,11 +318,11 @@ npm run dev  # Visit http://localhost:5173
 
 **Features:**
 - React 18+ with TypeScript
-- Uses both `@anonymous-art/fhevm-sdk` and `@anonymous-art/fhevm-react`
-- Demonstrates React hooks (`useFhevm`, `useEncryption`, `useContract`)
+- Full integration with `@anonymous-art/fhevm-react` package
+- Demonstrates React hooks (`useFhevm`, `useEncryption`, `useDecryption`)
 - Fast development with Vite
 - Hot module replacement (HMR)
-- Type-safe component development
+- Type-safe component development with full TypeScript support
 
 **Quick Start:**
 ```bash
@@ -320,14 +333,29 @@ npm run dev  # Visit http://localhost:5173
 
 **Key Files:**
 - `src/main.tsx` - Entry point with `FhevmProvider` setup
-- `src/App.tsx` - Main component demonstrating hooks
-- `src/components/` - Reusable components (EncryptForm, WalletConnect)
+- `src/App.tsx` - Main component demonstrating SDK hooks
+- `src/components/EncryptForm.tsx` - Encryption form component
+- `src/components/WalletConnect.tsx` - Wallet connection component
 - `vite.config.ts` - Vite configuration
+
+**SDK Integration:**
+```typescript
+import { useFhevm, useEncryption, useDecryption } from '@anonymous-art/fhevm-react';
+
+function App() {
+  const { client, isInitialized, error } = useFhevm();
+  const { encrypt, isEncrypting } = useEncryption();
+  const { decrypt, isDecrypting } = useDecryption();
+
+  const encrypted = await encrypt(42, 'uint8');
+  const decrypted = await decrypt(encrypted, 'uint8');
+}
+```
 
 **Demonstrated Hooks:**
 - `useFhevm()` - Access FHEVM client and initialization state
 - `useEncryption()` - Encrypt values with loading states
-- `useContract()` - Send encrypted data to smart contracts
+- `useDecryption()` - Decrypt encrypted values with EIP-712 signatures
 
 **Use Cases:**
 - Modern React applications
@@ -342,11 +370,12 @@ npm run dev  # Visit http://localhost:5173
 
 **Features:**
 - Next.js 14+ with App Router support
-- Server-side rendering (SSR) and static site generation (SSG)
-- API routes for backend integration
-- TypeScript and React hooks
-- Optimized production builds
-- SEO-friendly dApps
+- Full FHEVM SDK integration with `@anonymous-art/fhevm-sdk`
+- Server-side rendering (SSR) compatible architecture
+- TypeScript with comprehensive type definitions
+- Custom hooks for encryption and computation
+- Responsive UI with Tailwind CSS
+- Interactive demos (Encryption, Computation, Banking example)
 
 **Quick Start:**
 ```bash
@@ -356,29 +385,36 @@ npm run dev  # Visit http://localhost:3000
 ```
 
 **Key Files:**
-- `pages/_app.tsx` - Global `FhevmProvider` setup
-- `pages/index.tsx` - Home page with SDK usage
-- `pages/api/` - API routes (optional backend logic)
+- `src/app/page.tsx` - Main page with tabbed demo interface
+- `src/components/fhe/FHEProvider.tsx` - FHEVM SDK provider using `FhevmClient`
+- `src/hooks/useFHE.ts` - Main hook for accessing FHEVM client
+- `src/hooks/useEncryption.ts` - Encryption operations hook
+- `src/hooks/useComputation.ts` - Homomorphic computation hook
+- `src/components/fhe/EncryptionDemo.tsx` - Encryption demonstration
+- `src/components/fhe/ComputationDemo.tsx` - Computation demonstration
+- `src/components/examples/BankingExample.tsx` - Banking use case example
 - `next.config.js` - Next.js configuration with webpack fallbacks
 
-**Configuration Highlights:**
-```javascript
-// next.config.js - Required for FHEVM SDK
-webpack: (config) => {
-  config.resolve.fallback = {
-    fs: false,
-    net: false,
-    tls: false,
-  };
-  return config;
-}
+**SDK Integration Highlights:**
+```typescript
+// FHEProvider initializes FhevmClient
+const fhevmClient = await FhevmClient.fromWeb3Provider(provider);
+await fhevmClient.initialize();
+
+// useEncryption hook
+const { encrypt, isEncrypting } = useEncryption();
+const encrypted = await encrypt(42, 'uint32');
+
+// useComputation hook
+const { compute, isComputing } = useComputation();
+const result = await compute('add', 10, 20);
 ```
 
 **Use Cases:**
-- Production dApps requiring SEO
-- Full-stack Web3 applications
-- Projects with server-side logic
-- Multi-page applications
+- Production-ready FHE applications
+- Full-stack Web3 applications with privacy
+- Projects demonstrating complete SDK integration
+- Multi-page applications with complex FHE workflows
 
 ---
 
