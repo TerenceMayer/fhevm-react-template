@@ -4,57 +4,24 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card } from '@/components/ui/Card';
+import { useEncryption } from '@/hooks/useEncryption';
 
 export default function EncryptionDemo() {
+  const { encrypt, isEncrypting, error } = useEncryption();
   const [value, setValue] = useState('');
   const [type, setType] = useState('uint32');
   const [encrypted, setEncrypted] = useState<any>(null);
-  const [decrypted, setDecrypted] = useState<number | null>(null);
-  const [isEncrypting, setIsEncrypting] = useState(false);
-  const [isDecrypting, setIsDecrypting] = useState(false);
 
   const handleEncrypt = async () => {
     if (!value) return;
 
-    setIsEncrypting(true);
     try {
-      const response = await fetch('/api/fhe/encrypt', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ value: parseInt(value), type }),
-      });
-
-      const data = await response.json();
-      if (data.success) {
-        setEncrypted(data.encrypted);
-        setDecrypted(null);
+      const result = await encrypt(parseInt(value), type);
+      if (result) {
+        setEncrypted(result);
       }
     } catch (error) {
       console.error('Encryption error:', error);
-    } finally {
-      setIsEncrypting(false);
-    }
-  };
-
-  const handleDecrypt = async () => {
-    if (!encrypted) return;
-
-    setIsDecrypting(true);
-    try {
-      const response = await fetch('/api/fhe/decrypt', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ encryptedData: encrypted }),
-      });
-
-      const data = await response.json();
-      if (data.success) {
-        setDecrypted(data.decrypted);
-      }
-    } catch (error) {
-      console.error('Decryption error:', error);
-    } finally {
-      setIsDecrypting(false);
     }
   };
 
@@ -112,43 +79,30 @@ export default function EncryptionDemo() {
             <div>
               <p className="text-sm font-medium text-gray-700 mb-1">Encrypted Data:</p>
               <div className="bg-gray-100 p-3 rounded-lg break-all font-mono text-xs">
-                {encrypted.data}
-              </div>
-            </div>
-
-            <div>
-              <p className="text-sm font-medium text-gray-700 mb-1">Handle:</p>
-              <div className="bg-gray-100 p-3 rounded-lg break-all font-mono text-xs">
-                {encrypted.handles}
+                {typeof encrypted === 'string' ? encrypted.substring(0, 100) + '...' : JSON.stringify(encrypted).substring(0, 100) + '...'}
               </div>
             </div>
 
             <div>
               <p className="text-sm font-medium text-gray-700 mb-1">Type:</p>
               <div className="bg-blue-100 text-blue-800 inline-block px-3 py-1 rounded-full text-sm font-semibold">
-                {encrypted.type}
+                {type}
               </div>
             </div>
 
-            <Button
-              onClick={handleDecrypt}
-              isLoading={isDecrypting}
-              variant="success"
-              className="w-full"
-            >
-              Decrypt Value
-            </Button>
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <p className="text-sm text-green-800">
+                ✅ Value successfully encrypted using FHEVM SDK!
+              </p>
+            </div>
           </div>
         </Card>
       )}
 
-      {decrypted !== null && (
-        <Card title="Decrypted Result">
+      {error && (
+        <Card title="Error">
           <div className="text-center py-4">
-            <p className="text-4xl font-bold text-green-600 mb-2">
-              {decrypted}
-            </p>
-            <p className="text-gray-600">Original value recovered!</p>
+            <p className="text-red-600">{error}</p>
           </div>
         </Card>
       )}

@@ -1,32 +1,28 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { EncryptedValue, FHEType } from '@/types/fhe';
+import { useFHEContext } from '@/components/fhe/FHEProvider';
 
 export function useEncryption() {
+  const { client, isInitialized } = useFHEContext();
   const [isEncrypting, setIsEncrypting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [lastEncrypted, setLastEncrypted] = useState<EncryptedValue | null>(null);
+  const [lastEncrypted, setLastEncrypted] = useState<any>(null);
 
-  const encrypt = useCallback(async (value: number, type: FHEType = 'uint32'): Promise<EncryptedValue | null> => {
+  const encrypt = useCallback(async (value: number, type: string = 'uint32'): Promise<any> => {
+    if (!isInitialized || !client) {
+      const err = 'FHEVM client not initialized';
+      setError(err);
+      throw new Error(err);
+    }
+
     setIsEncrypting(true);
     setError(null);
 
     try {
-      const response = await fetch('/api/fhe/encrypt', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ value, type }),
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        setLastEncrypted(data.encrypted);
-        return data.encrypted;
-      } else {
-        throw new Error(data.error || 'Encryption failed');
-      }
+      const encrypted = await client.encrypt(value, type);
+      setLastEncrypted(encrypted);
+      return encrypted;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Encryption failed';
       setError(errorMessage);
@@ -34,26 +30,21 @@ export function useEncryption() {
     } finally {
       setIsEncrypting(false);
     }
-  }, []);
+  }, [client, isInitialized]);
 
-  const encryptBatch = useCallback(async (values: Array<{ value: number; type: FHEType }>): Promise<EncryptedValue[]> => {
+  const encryptBatch = useCallback(async (values: Array<{ value: number; type: string }>): Promise<any[]> => {
+    if (!isInitialized || !client) {
+      const err = 'FHEVM client not initialized';
+      setError(err);
+      return [];
+    }
+
     setIsEncrypting(true);
     setError(null);
 
     try {
-      const promises = values.map(({ value, type }) =>
-        fetch('/api/fhe/encrypt', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ value, type }),
-        }).then(res => res.json())
-      );
-
-      const results = await Promise.all(promises);
-      const encrypted = results
-        .filter(r => r.success)
-        .map(r => r.encrypted);
-
+      const promises = values.map(({ value, type }) => client.encrypt(value, type));
+      const encrypted = await Promise.all(promises);
       return encrypted;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Batch encryption failed';
@@ -62,7 +53,7 @@ export function useEncryption() {
     } finally {
       setIsEncrypting(false);
     }
-  }, []);
+  }, [client, isInitialized]);
 
   return {
     encrypt,

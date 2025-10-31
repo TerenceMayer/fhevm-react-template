@@ -1,12 +1,14 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { FhevmClient } from '@anonymous-art/fhevm-sdk';
+import { providers } from 'ethers';
 
 interface FHEContextType {
+  client: FhevmClient | null;
   isInitialized: boolean;
   isLoading: boolean;
   error: string | null;
-  publicKey: string | null;
   initialize: () => Promise<void>;
 }
 
@@ -21,25 +23,33 @@ export const useFHEContext = () => {
 };
 
 export const FHEProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [client, setClient] = useState<FhevmClient | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [publicKey, setPublicKey] = useState<string | null>(null);
 
   const initialize = async () => {
     setIsLoading(true);
     setError(null);
 
     try {
-      // Fetch public keys from API
-      const response = await fetch('/api/keys');
-      const data = await response.json();
+      // Check if window.ethereum is available
+      if (typeof window !== 'undefined' && (window as any).ethereum) {
+        const provider = new providers.Web3Provider((window as any).ethereum);
+        const fhevmClient = await FhevmClient.fromWeb3Provider(provider);
+        await fhevmClient.initialize();
 
-      if (data.success) {
-        setPublicKey(data.keys.publicKey);
+        setClient(fhevmClient);
         setIsInitialized(true);
       } else {
-        throw new Error(data.error || 'Failed to initialize FHE');
+        // Initialize with default config for SSR or no wallet
+        const fhevmClient = new FhevmClient({
+          chainId: 11155111, // Sepolia
+        });
+        await fhevmClient.initialize();
+
+        setClient(fhevmClient);
+        setIsInitialized(true);
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error';
@@ -55,10 +65,10 @@ export const FHEProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }, []);
 
   const value: FHEContextType = {
+    client,
     isInitialized,
     isLoading,
     error,
-    publicKey,
     initialize,
   };
 
@@ -68,7 +78,7 @@ export const FHEProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         <div className="flex items-center justify-center min-h-screen">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Initializing FHE system...</p>
+            <p className="text-gray-600">Initializing FHEVM SDK...</p>
           </div>
         </div>
       ) : error ? (

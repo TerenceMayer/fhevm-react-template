@@ -33,12 +33,9 @@ async function initializeFhevm() {
     }
 
     provider = new ethers.BrowserProvider(window.ethereum);
-    client = FhevmClient.fromWeb3Provider(provider);
+    client = await FhevmClient.fromWeb3Provider(provider);
 
-    await client.initialize({
-      chainId: 11155111, // Sepolia
-      gatewayUrl: 'https://gateway.sepolia.zama.ai'
-    });
+    await client.initialize();
 
     fhevmStatus.className = 'status success';
     fhevmStatus.textContent = '✅ FHEVM Client Initialized';
