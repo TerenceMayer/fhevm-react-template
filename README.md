@@ -11,11 +11,12 @@
 ## 🔗 Quick Links
 
 - **🚀 Live Demo**: [https://terencemayer.github.io/FHEAnonymousArtAuthentication/](https://terencemayer.github.io/FHEAnonymousArtAuthentication/)
-- **📋 GitHub Repository**: [https://github.com/TerenceMayer/fhevm-react-template](https://github.com/TerenceMayer/fhevm-react-template)
 - **🎥 Video Demo**: Watch demonstration (demo1.mp4 demo2.mp4)
-- **📦 SDK Package**: `packages/fhevm-sdk/`
-- **⚛️ React Hooks**: `packages/fhevm-react/`
-- **📝 Examples**: `examples/` - [Vanilla JS](#1-vanilla-javascript-example-examplesvanilla-js), [React](#2-react--vite-example-examplesreact), [Next.js](#3-nextjs-example-examplesnextjs), [Demo App](#4-fheanonymousartauthentication-examplesfheanonymousartauthentication)
+- **📦 SDK Package**: `packages/fhevm-sdk/` - [README](packages/fhevm-sdk/README.md)
+- **⚛️ React Hooks**: `packages/fhevm-react/` - [README](packages/fhevm-react/README.md)
+- **🏗️ Templates**: `templates/` - [Next.js](#-templates), [React](#-templates)
+- **📝 Examples**: `examples/` - [Vanilla JS](#1-vanilla-javascript-example-examplesvanilla-js), [React](#2-react--vite-example-examplesreact), [Next.js](#3-nextjs-example-examplesnextjs), [Demo App (Vanilla)](#4-fheanonymousartauthentication---vanilla-js-examplesfheanonymousartauthentication), [Demo App (React)](#5-fheanonymousartauthentication---react-edition-examplesfheanonymousartauthentication-react)
+- **📚 Documentation**: `docs/` - [Getting Started](docs/getting-started.md), [API Reference](docs/api-reference.md), [Best Practices](docs/best-practices.md), [Troubleshooting](docs/troubleshooting.md)
 
 ---
 
@@ -68,19 +69,25 @@ fhevm-sdk/
 ├── packages/
 │   ├── fhevm-sdk/              # Core SDK (framework-agnostic)
 │   │   ├── src/
-│   │   │   ├── client/        # FHE client initialization
-│   │   │   ├── encryption/    # Input encryption utilities
-│   │   │   ├── decryption/    # User & public decryption
-│   │   │   ├── signatures/    # EIP-712 signature handling
-│   │   │   └── types/         # TypeScript definitions
-│   │   └── package.json
+│   │   │   ├── core/          # Core classes (FhevmClient, managers)
+│   │   │   ├── types/         # TypeScript type definitions
+│   │   │   ├── utils/         # Utility functions
+│   │   │   └── index.ts       # Main exports
+│   │   ├── package.json
+│   │   └── README.md          # SDK documentation
 │   │
 │   └── fhevm-react/            # React hooks library
 │       ├── src/
 │       │   ├── hooks/         # React hooks (useFhevm, useEncryption, etc.)
 │       │   ├── context/       # React context providers
-│       │   └── types/         # React-specific types
-│       └── package.json
+│       │   ├── types/         # React-specific types
+│       │   └── index.ts       # Main exports
+│       ├── package.json
+│       └── README.md          # React hooks documentation
+│
+├── templates/                  # Example templates for quick start
+│   ├── nextjs/                # Next.js template
+│   └── react/                 # React + Vite template
 │
 ├── contracts/                  # Solidity smart contracts
 │   └── AnonymousArtAuthentication.sol
@@ -92,7 +99,14 @@ fhevm-sdk/
 │   ├── vanilla-js/            # Pure JavaScript example
 │   ├── react/                 # React + Vite example
 │   ├── nextjs/                # Next.js example
-│   └── FHEAnonymousArtAuthentication/  # Full demo application
+│   ├── FHEAnonymousArtAuthentication/      # Full demo (vanilla JS)
+│   └── FHEAnonymousArtAuthentication-react/ # Full demo (React + TS)
+│
+├── docs/                       # Documentation
+│   ├── getting-started.md     # Installation and quick start
+│   ├── api-reference.md       # Complete API documentation
+│   ├── best-practices.md      # Recommended patterns
+│   └── troubleshooting.md     # Common issues and solutions
 │
 └── index.html                 # Standalone demo (no build required)
 ```
@@ -262,6 +276,17 @@ npm test
 
 ---
 
+## 📋 Templates
+
+The `templates/` directory provides ready-to-use project templates for quick start:
+
+- **`templates/nextjs/`** - Next.js 14+ template with App Router, complete FHE integration, and TypeScript
+- **`templates/react/`** - React 18+ template with Vite, FHEVM SDK hooks, and TypeScript
+
+These templates are production-ready starting points for building your own FHE-powered applications.
+
+---
+
 ## 📝 Examples
 
 The `examples/` directory contains complete, working examples demonstrating how to use the FHEVM SDK in different environments. Each example is self-contained and ready to run.
@@ -275,12 +300,14 @@ All examples demonstrate complete SDK integration using `@anonymous-art/fhevm-sd
 **Perfect for:** Developers who want to use the SDK without any framework overhead.
 
 **Features:**
-- Pure JavaScript implementation using `@anonymous-art/fhevm-sdk`
-- Direct FhevmClient usage with Web3 provider
-- No build step required - runs with Vite
+- ✅ **SDK Integrated**: Uses `@anonymous-art/fhevm-sdk` for all FHE operations
+- Pure JavaScript implementation with direct FhevmClient usage
+- Web3 provider integration with ethers.js v6
+- Runs with Vite dev server - fast HMR
 - Minimal bundle size and fast load times
 - Full SDK access without framework abstractions
 - Demonstrates core encryption/decryption workflow
+- Live wallet connection and transaction handling
 
 **Quick Start:**
 ```bash
@@ -317,12 +344,14 @@ const encrypted = await client.encrypt(42, 'uint8');
 **Perfect for:** React developers building modern single-page applications.
 
 **Features:**
-- React 18+ with TypeScript
-- Full integration with `@anonymous-art/fhevm-react` package
-- Demonstrates React hooks (`useFhevm`, `useEncryption`, `useDecryption`)
-- Fast development with Vite
-- Hot module replacement (HMR)
-- Type-safe component development with full TypeScript support
+- ✅ **SDK Integrated**: Full integration with `@anonymous-art/fhevm-react` hooks
+- React 18+ with TypeScript for type safety
+- Demonstrates all React hooks (`useFhevm`, `useEncryption`, `useDecryption`)
+- FhevmProvider context for app-wide state
+- Fast development with Vite and HMR
+- Type-safe component development
+- Complete wallet integration flow
+- Loading states and error handling
 
 **Quick Start:**
 ```bash
@@ -369,13 +398,15 @@ function App() {
 **Perfect for:** Full-stack applications with server-side rendering and SEO requirements.
 
 **Features:**
-- Next.js 14+ with App Router support
-- Full FHEVM SDK integration with `@anonymous-art/fhevm-sdk`
+- ✅ **SDK Integrated**: Complete `@anonymous-art/fhevm-sdk` integration
+- Next.js 14+ with App Router and React Server Components
 - Server-side rendering (SSR) compatible architecture
 - TypeScript with comprehensive type definitions
-- Custom hooks for encryption and computation
+- Custom hooks (`useFHE`, `useEncryption`, `useComputation`)
+- FHEProvider with client-side state management
 - Responsive UI with Tailwind CSS
 - Interactive demos (Encryption, Computation, Banking example)
+- API routes for FHE operations
 
 **Quick Start:**
 ```bash
@@ -418,17 +449,19 @@ const result = await compute('add', 10, 20);
 
 ---
 
-#### 4. FHEAnonymousArtAuthentication (`examples/FHEAnonymousArtAuthentication/`)
+#### 4. FHEAnonymousArtAuthentication - Vanilla JS (`examples/FHEAnonymousArtAuthentication/`)
 
-**Perfect for:** Understanding a complete, production-ready FHE application with real-world use case.
+**Perfect for:** Understanding a complete, production-ready FHE application with real-world use case (vanilla JavaScript version).
 
 **Features:**
 - 🎨 **Full Production dApp** - Complete anonymous artwork authentication platform
 - 🔐 **Privacy-Preserving** - Eliminates bias by hiding artist identity, value, and provenance
 - ⛓️ **Live on Sepolia** - Fully deployed and operational testnet contract
+- 📦 **SDK Ready** - Package.json configured with `@anonymous-art/fhevm-sdk`
 - 🎯 **Advanced FHE Patterns** - Encrypted computation, ACL management, consensus mechanisms
 - 📱 **Responsive UI** - Modern, mobile-friendly interface
 - 🔄 **Real-Time Updates** - Event-driven blockchain synchronization
+- 📚 **Migration Guide** - [SDK_INTEGRATION.md](examples/FHEAnonymousArtAuthentication/SDK_INTEGRATION.md) for full SDK integration
 
 **Quick Start:**
 ```bash
@@ -455,10 +488,11 @@ npm run serve
 **What It Demonstrates:**
 
 *SDK Integration:*
-- ✅ FHEVM SDK integration in vanilla JavaScript
-- ✅ Client-side encryption with `@anonymous-art/fhevm-sdk`
+- 📦 Package configured with `@anonymous-art/fhevm-sdk` dependency
+- 📚 Complete SDK integration guide provided
 - ✅ Multiple encrypted data types (`euint8`, `euint32`)
 - ✅ EIP-712 signature workflows for decryption
+- 📖 See [SDK_INTEGRATION.md](examples/FHEAnonymousArtAuthentication/SDK_INTEGRATION.md) for migration steps
 
 *Smart Contract Patterns:*
 - ✅ Access control lists (ACL) with `FHE.allow()` and `FHE.allowThis()`
@@ -477,6 +511,63 @@ npm run serve
 - 🎓 **Learning Reference** - Study a complete FHE application architecture
 - 🏗️ **Template** - Starting point for similar authentication/voting systems
 - 🔬 **Research** - Understanding privacy-preserving computation patterns
+
+---
+
+#### 5. FHEAnonymousArtAuthentication - React Edition (`examples/FHEAnonymousArtAuthentication-react/`)
+
+**Perfect for:** Modern React developers building production-ready FHE applications with TypeScript.
+
+**Features:**
+- ⚛️ **React 18 + TypeScript** - Modern, type-safe component architecture
+- 🔄 **Converted from Vanilla JS** - Complete React migration of the authentication platform
+- ✅ **Full SDK Integration** - Uses `@anonymous-art/fhevm-sdk` with React Context API
+- 🎯 **Component-Based** - Modular, reusable components (WalletConnect, ArtworkSubmission, ExpertAuthentication, AdminPanel)
+- 🔐 **Same FHE Features** - All privacy-preserving features from vanilla version
+- 🎨 **Improved UX** - Better state management and user feedback
+- 🚀 **Vite + HMR** - Fast development with Hot Module Replacement
+- 📱 **Responsive Design** - Mobile-friendly with modern CSS
+
+**Quick Start:**
+```bash
+cd examples/FHEAnonymousArtAuthentication-react
+npm install
+npm run dev  # Visit http://localhost:5173
+```
+
+**Key Components:**
+- `src/context/FHEContext.tsx` - FHE provider with wallet state management
+- `src/components/WalletConnect.tsx` - Wallet connection UI component
+- `src/components/ArtworkSubmission.tsx` - Submit encrypted artworks
+- `src/components/ExpertAuthentication.tsx` - Expert registration & authentication
+- `src/components/AdminPanel.tsx` - Admin verification functions
+
+**React Architecture:**
+```typescript
+// FHE Context Provider
+<FHEProvider>
+  <App />
+</FHEProvider>
+
+// Using FHE hooks
+const { client, isInitialized, wallet } = useFHE();
+const contract = new ethers.Contract(address, abi, signer);
+await contract.submitArtwork(metadata, condition, consensus);
+```
+
+**Advantages over Vanilla Version:**
+- ✅ Better code organization with components
+- ✅ Type safety with TypeScript
+- ✅ Easier state management with React hooks
+- ✅ Improved developer experience with HMR
+- ✅ More maintainable and testable code
+- ✅ Modern build tooling with Vite
+
+**Use Cases:**
+- 🎓 **Learning React + FHE** - See how to integrate FHE in modern React apps
+- 🏗️ **Production Templates** - Starting point for enterprise React dApps
+- 🔬 **Best Practices** - Study modern React architecture with blockchain
+- ⚛️ **Component Library** - Reusable FHE components for your projects
 - 🎨 **Art Market** - Bias-free artwork authentication in practice
 - 🗳️ **Voting Systems** - Anonymous voting with verifiable results
 - 🏥 **Healthcare** - Private medical record verification
@@ -492,18 +583,20 @@ npm run serve
 
 ### Choosing the Right Example
 
-| Example | Framework | TypeScript | Build Required | Complexity | Best For |
+| Example | Framework | TypeScript | SDK Integration | Complexity | Best For |
 |---------|-----------|------------|----------------|------------|----------|
-| **vanilla-js** | None | ✗ | Optional | ⭐ Simple | Prototypes, learning SDK basics |
-| **react** | React + Vite | ✓ | Yes | ⭐⭐ Moderate | Modern SPAs, component-based apps |
-| **nextjs** | Next.js | ✓ | Yes | ⭐⭐ Moderate | SEO-friendly dApps, full-stack apps |
-| **FHEAnonymousArtAuthentication** | Vanilla JS | ✗ | Optional | ⭐⭐⭐ Advanced | Production reference, complete FHE workflows |
+| **vanilla-js** | None | ✗ | ✅ Full | ⭐ Simple | Prototypes, learning SDK basics |
+| **react** | React + Vite | ✓ | ✅ Full | ⭐⭐ Moderate | Modern SPAs, component-based apps |
+| **nextjs** | Next.js | ✓ | ✅ Full | ⭐⭐ Moderate | SEO-friendly dApps, full-stack apps |
+| **FHEAnonymousArtAuthentication** | Vanilla JS | ✗ | 📚 Guide Provided | ⭐⭐⭐ Advanced | Production reference (vanilla) |
+| **FHEAnonymousArtAuthentication-react** | React + Vite + TS | ✓ | ✅ Full | ⭐⭐⭐ Advanced | Production reference (React) |
 
 **Recommendation:**
 - 🚀 **Just starting?** → Use `vanilla-js` to learn SDK fundamentals
 - ⚛️ **Building with React?** → Use `react` for hooks and components
 - 🌐 **Need SEO/SSR?** → Use `nextjs` for server-side rendering
-- 🎨 **Want to see it all?** → Explore `FHEAnonymousArtAuthentication` for real-world patterns
+- 🎨 **Want complete vanilla app?** → Explore `FHEAnonymousArtAuthentication` for real-world patterns
+- ⚛️ **Want complete React app?** → Explore `FHEAnonymousArtAuthentication-react` for production-ready React architecture
 
 ---
 
@@ -523,6 +616,7 @@ cd examples/vanilla-js && npm run dev
 cd examples/react && npm run dev
 cd examples/nextjs && npm run dev
 cd examples/FHEAnonymousArtAuthentication && npm run serve
+cd examples/FHEAnonymousArtAuthentication-react && npm run dev
 ```
 
 ---
@@ -852,20 +946,54 @@ npm run test:e2e
 
 ## 📚 Documentation
 
-### For SDK Users
+### Comprehensive Guides
 
-- **Installation Guide**: Get started with the SDK
-- **API Reference**: Complete API documentation
-- **Usage Examples**: Real-world code examples
-- **Best Practices**: Recommended patterns
-- **Troubleshooting**: Common issues and solutions
+The `docs/` directory contains complete documentation for the SDK:
+
+#### Getting Started
+- **[Getting Started Guide](docs/getting-started.md)**
+  - Installation instructions
+  - Quick start for vanilla JS, React, and Next.js
+  - Configuration options
+  - Core concepts (encryption, decryption, contract interaction)
+
+#### API Reference
+- **[API Reference](docs/api-reference.md)**
+  - Complete API documentation for `@anonymous-art/fhevm-sdk`
+  - React hooks API for `@anonymous-art/fhevm-react`
+  - Type definitions and interfaces
+  - Error handling reference
+
+#### Best Practices
+- **[Best Practices](docs/best-practices.md)**
+  - Initialization patterns
+  - Encryption optimization
+  - Error handling strategies
+  - React integration tips
+  - Performance optimization
+  - Security considerations
+
+#### Troubleshooting
+- **[Troubleshooting Guide](docs/troubleshooting.md)**
+  - Common issues and solutions
+  - React-specific problems
+  - Next.js SSR issues
+  - Build and deployment problems
+  - Debugging techniques
+
+### Package Documentation
+
+Each package has its own README with specific usage instructions:
+
+- **[fhevm-sdk README](packages/fhevm-sdk/README.md)** - Core SDK documentation
+- **[fhevm-react README](packages/fhevm-react/README.md)** - React hooks documentation
 
 ### For Contributors
 
-- **Architecture Overview**: SDK design principles
-- **Development Guide**: How to contribute
-- **Testing Guide**: Writing and running tests
-- **Release Process**: How we publish updates
+- **Architecture Overview**: SDK design principles (see this README)
+- **Development Guide**: How to contribute (see [Contributing](#-contributing))
+- **Testing Guide**: Writing and running tests (`npm test`)
+- **Release Process**: Standard npm package release workflow
 
 ---
 
